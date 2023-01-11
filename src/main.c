@@ -1,4 +1,3 @@
-#include "dn_info_util.h"
 #include <stdio.h>
 
 int main(int argc, char **argv)
