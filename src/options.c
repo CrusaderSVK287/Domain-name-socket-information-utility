@@ -21,6 +21,7 @@ void _err(int level, const char *msg, ...)
 
 #ifndef NDEBUG
         if (level == ERR_DEBUG) {
+                printf("DEBUG: ");
                 vfprintf(stdout, msg, args);
                 goto out;
         }
@@ -31,11 +32,15 @@ void _err(int level, const char *msg, ...)
                 goto out;
         }
 
-        if (level & ERR_WARNING)
+        if (level & ERR_WARNING) {
+                printf("Warning: ");
                 vfprintf(stderr, msg, args);
+        }
 
-        if (level & ERR_FATAL)
+        if (level & ERR_FATAL) {
+                fprintf(stderr, "FATAL ERROR\n");
                 exit(1);
+        }
 
 out:
         va_end(args);
