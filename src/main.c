@@ -1,7 +1,7 @@
-#include <stdio.h>
+#include "dn_info_util.h"
 
 int main(int argc, char **argv)
 {
-        printf("Hello world\n");
+        get_domain_name_info(argc, argv);
         return 0;
 }

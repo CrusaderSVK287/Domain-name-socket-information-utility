@@ -1,4 +1,7 @@
 #include "dn_info_util.h"
+#include "options.h"
+#include "parser.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -13,9 +16,14 @@ void get_domain_name_info(int argc, char **argv)
         memset(buff, 0x00, BUFSIZ);
 
         for (int i = 1; i < argc; i++) {
-                if (argv[0] == '-')
+                if (argv[i][0] == '-')
                         continue;
-                //parse dn
+
+                if (get_domain_name(buff, argv[i], BUFSIZ) < 0) {
+                        e_info("There was an error with parsing domain "
+                               "name from %s, skipping\n", argv[i]);
+                        continue;
+                }
                 //call contact dns
         }
 }
