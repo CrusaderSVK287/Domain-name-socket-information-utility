@@ -40,3 +40,7 @@ valgrind: $(BIN)
 ### SET UP ###
 -setup:
 	@mkdir -p $(SRCDIR) $(OBJDIR) $(BINDIR)
+
+### RELEASE ###
+release: CFLAGS += -DNDEBUG
+release: $(BIN)
