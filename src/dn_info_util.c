@@ -53,6 +53,8 @@ static int dn_info(const char *dn)
 
         int ret = 0;
         struct addrinfo *res = NULL;
+        /* Since res is being changed, keep the reference to free */
+        struct addrinfo *tmp = NULL;
         struct addrinfo hints = {0};
 
         hints.ai_family         = AF_UNSPEC;    /* Support both ipv4 and 6 addresses */
@@ -68,12 +70,15 @@ static int dn_info(const char *dn)
                 return -1;
         }
 
+        tmp = res;
         while (res != NULL) {
                 if (print_addrinfo(res) < 0)
                         e_warning("Could not print address info\n", NULL);
 
                 res = res->ai_next;
         }
+
+        freeaddrinfo(tmp);
 
         return 0;
 }
