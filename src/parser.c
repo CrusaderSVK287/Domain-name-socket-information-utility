@@ -134,5 +134,18 @@ const char *get_protocol(int p)
 
 const char *get_socktype(int st)
 {
+        switch (st)
+        {
+        case SOCK_STREAM: return "Stream socket";
+        case SOCK_DGRAM: return "Datagram socket";
+        case SOCK_RAW: return "Raw socket";
+        case SOCK_RDM: return "RDM socket";
+        case SOCK_SEQPACKET: return "Sequenced datagram socket";
+        case SOCK_DCCP: return "Datagram Congestion Control Protocol";
+        case SOCK_PACKET: return "Packet socket";
+        case SOCK_CLOEXEC: return "CLOEXEC socket";
+        case SOCK_NONBLOCK: return "Non-blocking socket";
+        default: break;
+        }
         return PARSING_ERROR;
 }
