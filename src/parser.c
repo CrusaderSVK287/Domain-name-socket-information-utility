@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/socket.h>
+#include <netdb.h>
 
 #define PARSING_ERROR "PARSING ERROR"
 
@@ -96,6 +97,38 @@ const char *get_address_family(int af)
 
 const char *get_protocol(int p)
 {
+        switch (p)
+        {
+        case IPPROTO_IP: return "TCP";
+        case IPPROTO_ICMP: return "ICMP";
+        case IPPROTO_IGMP: return "IGMP";
+        case IPPROTO_IPIP: return "IPIP";
+        case IPPROTO_TCP: return "TCP";
+        case IPPROTO_EGP: return "EGP";
+        case IPPROTO_PUP: return "PUP";
+        case IPPROTO_UDP: return "UDP";
+        case IPPROTO_IDP: return "IDP";
+        case IPPROTO_TP: return "TP";
+        case IPPROTO_DCCP: return "DCCP";
+        case IPPROTO_IPV6: return "IPV6";
+        case IPPROTO_RSVP: return "RSVP";
+        case IPPROTO_GRE: return "GRE";
+        case IPPROTO_ESP: return "ESP";
+        case IPPROTO_AH: return "AH";
+        case IPPROTO_MTP: return "MTP";
+        case IPPROTO_BEETPH: return "BEETPH";
+        case IPPROTO_ENCAP: return "ENCAP";
+        case IPPROTO_PIM: return "PIM";
+        case IPPROTO_COMP: return "COMP";
+        case IPPROTO_SCTP: return "SCTP";
+        case IPPROTO_UDPLITE: return "UDPLITE";
+        case IPPROTO_MPLS: return "MPLS";
+        case IPPROTO_ETHERNET: return "ETHERNET";
+        case IPPROTO_RAW: return "RAW";
+        case IPPROTO_MPTCP: return "MPTCP";
+        default: break;
+        }
+
         return PARSING_ERROR;
 }
 
