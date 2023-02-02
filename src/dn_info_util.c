@@ -12,9 +12,11 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 
+#include <arpa/inet.h>
+
 #define HTTP_PORT "80"
 
-/* Function contact dns server to obtain information */
+/* Function contacts dns server to obtain information */
 static int dn_info(const char *dn);
 /* Function prints all information from addrinfo */
 static int print_addrinfo(const struct addrinfo *a);
@@ -55,7 +57,7 @@ static int dn_info(const char *dn)
 
         hints.ai_family         = AF_UNSPEC;    /* Support both ipv4 and 6 addresses */
         hints.ai_socktype       = 0;            /* Any socket type */
-        hints.ai_flags          = 0;
+        hints.ai_flags          = AI_CANONNAME;
         hints.ai_protocol       = IPPROTO_IP;   /* Any protocol */
 
         if ((ret = getaddrinfo(dn, HTTP_PORT, &hints, &res)) < 0) {
@@ -80,6 +82,22 @@ static int print_addrinfo(const struct addrinfo *a)
 {
         if (!a)
                 return -1;
+
+        char addrbuf[BUFSIZ];
+        memset(addrbuf, 0x00, BUFSIZ);
+
+        if (!inet_ntop(a->ai_family, a->ai_addr, addrbuf, BUFSIZ))
+                e_warning("Failed to convert address from ntop", NULL);
+
+        printf("address: %s\n"
+                "family %d\n"
+                "protocol %d\n"
+                "type %d\n"
+                "\n",
+                addrbuf,
+                a->ai_family,
+                a->ai_protocol,
+                a->ai_socktype);
 
         return 0;
 }
