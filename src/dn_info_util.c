@@ -95,12 +95,12 @@ static int print_addrinfo(const struct addrinfo *a)
                 e_warning("Failed to convert address from ntop", NULL);
 
         printf("address: %s\n"
-                "family %d\n"
+                "address family: %s\n"
                 "protocol %d\n"
                 "type %d\n"
                 "\n",
                 addrbuf,
-                a->ai_family,
+                get_address_family(a->ai_family),
                 a->ai_protocol,
                 a->ai_socktype);
 

@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/socket.h>
+
+#define PARSING_ERROR "PARSING ERROR"
 
 int get_domain_name(char *result, const char *input, size_t res_len)
 {
@@ -33,4 +36,70 @@ int get_domain_name(char *result, const char *input, size_t res_len)
 
         e_debug("parsed %s of %d lenght\n", result, i);
         return 0;
+}
+
+const char *get_address_family(int af)
+{
+        switch (af)
+        {
+        case AF_UNSPEC : return "Unspecified";
+        case AF_LOCAL : return "Local";
+        case AF_INET : return "IPv4";
+        case AF_AX25 : return "Amateur Radio AX.25";
+        case AF_IPX : return "Novell Internet Protocol";
+        case AF_APPLETALK : return "Appletalk DDP";
+        case AF_NETROM : return "Amateur radio NetROM";
+        case AF_BRIDGE : return "Multiprotocol bridge";
+        case AF_ATMPVC : return "ATM PVCs";
+        case AF_X25 : return "Reserved for X.25 project";
+        case AF_INET6: return "IPv6"; 
+        case AF_ROSE: return "Amateur Radio X.25 PLP";
+        case AF_DECnet: return "Reserved for DECnet project";
+        case AF_NETBEUI: return "Reserved for 802.2LLC project";
+        case AF_SECURITY: return "Security callback pseudo AF";
+        case AF_KEY: return "PF_KEY key management API";
+        case AF_NETLINK: return "Netlink";
+        case AF_PACKET: return "Packet family";
+        case AF_ASH: return "Ash";
+        case AF_ECONET: return "Acorn Econet";
+        case AF_ATMSVC: return "ATM SVCs";
+        case AF_RDS: return "RDS sockets";
+        case AF_SNA: return "Linux SNA Project";
+        case AF_IRDA: return "IRDA sockets";
+        case AF_PPPOX: return "PPPoX sockets";
+        case AF_WANPIPE: return "Wanpipe API sockets";
+        case AF_LLC: return "Linux LLC";
+        case AF_IB: return "Native InfiniBand address";
+        case AF_MPLS: return "MPLS";
+        case AF_CAN: return "Controller Area Network";
+        case AF_TIPC: return "TIPC sockets"; 
+        case AF_BLUETOOTH: return "Bluetooth sockets";
+        case AF_IUCV: return "IUCV sockets";
+        case AF_RXRPC: return "RxRPC sockets";
+        case AF_ISDN: return "mISDN sockets";
+        case AF_PHONET: return "Phonet sockets";
+        case AF_IEEE802154: return "IEEE 802.15.4 sockets";
+        case AF_CAIF: return "CAIF sockets";
+        case AF_ALG: return "Algorhitm sockets";
+        case AF_NFC: return "NFC sockets";
+        case AF_VSOCK: return "vSockets";
+        case AF_KCM: return "Kernel Connection Multiplexor";
+        case AF_QIPCRTR: return "Qualcomm IPC Router";
+        case AF_SMC: return "SMC sockets";
+        case AF_XDP: return "XDP sockets";
+        case AF_MCTP: return "Management component transport protocol";
+        default: break;
+        }
+        
+        return PARSING_ERROR;
+}
+
+const char *get_protocol(int p)
+{
+        return PARSING_ERROR;
+}
+
+const char *get_socktype(int st)
+{
+        return PARSING_ERROR;
 }
