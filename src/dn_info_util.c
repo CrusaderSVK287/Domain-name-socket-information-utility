@@ -91,8 +91,19 @@ static int print_addrinfo(const struct addrinfo *a)
         char addrbuf[BUFSIZ];
         memset(addrbuf, 0x00, BUFSIZ);
 
-        if (!inet_ntop(a->ai_family, a->ai_addr, addrbuf, BUFSIZ))
-                e_warning("Failed to convert address from ntop", NULL);
+        /* Getting ipv4 or ipv6 address in a human-readable form */
+        switch(a->ai_family) {
+        case AF_INET:
+                struct sockaddr_in *addr_in = (struct sockaddr_in *)a->ai_addr;
+                inet_ntop(AF_INET, &(addr_in->sin_addr), addrbuf, INET_ADDRSTRLEN);
+                break;
+        case AF_INET6:
+                struct sockaddr_in6 *addr_in6 = (struct sockaddr_in6 *)a->ai_addr;
+                inet_ntop(AF_INET6, &(addr_in6->sin6_addr), addrbuf, INET6_ADDRSTRLEN);
+                break;
+        default:
+                break;
+        }
 
         printf("address:              %s\n"
                 "address family: %4d  %s\n"
