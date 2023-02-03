@@ -8,7 +8,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-#define PARSING_ERROR "PARSING ERROR"
+#define PARSING_ERROR "Not supported"
 
 int get_domain_name(char *result, const char *input, size_t res_len)
 {
@@ -99,7 +99,7 @@ const char *get_protocol(int p)
 {
         switch (p)
         {
-        case IPPROTO_IP: return "TCP";
+        case IPPROTO_IP: return "Unspecified";
         case IPPROTO_ICMP: return "ICMP";
         case IPPROTO_IGMP: return "IGMP";
         case IPPROTO_IPIP: return "IPIP";

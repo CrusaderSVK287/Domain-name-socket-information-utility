@@ -32,7 +32,7 @@ run: $(BIN)
 	@./$(BIN) $(RUNARGS)
 
 debug: $(BIN)
-	gdb ./$(BIN)
+	gdb --args ./$(BIN) $(RUNARGS)
 
 valgrind: $(BIN)
 	valgrind -s --leak-check=full ./$(BIN) $(RUNARGS)

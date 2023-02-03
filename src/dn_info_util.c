@@ -17,13 +17,16 @@
 #define HTTP_PORT "80"
 
 /* Function contacts dns server to obtain information */
-static int dn_info(const char *dn);
+static int dn_info(const char *dn, options_t *opts);
 /* Function prints all information from addrinfo */
-static int print_addrinfo(const struct addrinfo *a);
+static int print_addrinfo(const struct addrinfo *a, options_t *opts);
+/* Function determines whether socket should be printed or not.
+ * Returns 1 if yes, 0 if not */
+static int print_socket(const struct addrinfo *a, options_t *opts);
 
-void get_domain_name_info(int argc, char **argv)
+void get_domain_name_info(int argc, char **argv, options_t *opts)
 {
-        if (!argv)
+        if (!argv || !opts)
                 return;
 
         char buff[BUFSIZ];
@@ -39,16 +42,16 @@ void get_domain_name_info(int argc, char **argv)
                         continue;
                 }
 
-                if (dn_info(buff) < 0) {
+                if (dn_info(buff, opts) < 0) {
                         e_warning("Failed to obtain domain name information\n", NULL);
                         continue;
                 }
         }
 }
 
-static int dn_info(const char *dn)
+static int dn_info(const char *dn, options_t *opts)
 {
-        if (!dn)
+        if (!dn || !opts)
                 return -1;
 
         int ret = 0;
@@ -59,7 +62,7 @@ static int dn_info(const char *dn)
 
         hints.ai_family         = AF_UNSPEC;    /* Support both ipv4 and 6 addresses */
         hints.ai_socktype       = 0;            /* Any socket type */
-        hints.ai_flags          = AI_CANONNAME;
+        hints.ai_flags          = 0;
         hints.ai_protocol       = IPPROTO_IP;   /* Any protocol */
 
         if ((ret = getaddrinfo(dn, HTTP_PORT, &hints, &res)) < 0) {
@@ -72,7 +75,7 @@ static int dn_info(const char *dn)
 
         tmp = res;
         while (res != NULL) {
-                if (print_addrinfo(res) < 0)
+                if (print_addrinfo(res, opts) < 0)
                         e_warning("Could not print address info\n", NULL);
 
                 res = res->ai_next;
@@ -83,10 +86,13 @@ static int dn_info(const char *dn)
         return 0;
 }
 
-static int print_addrinfo(const struct addrinfo *a)
+static int print_addrinfo(const struct addrinfo *a, options_t *opts)
 {
-        if (!a)
+        if (!a || !opts)
                 return -1;
+
+        if (!print_socket(a, opts))
+                return 0;
 
         char addrbuf[BUFSIZ];
         memset(addrbuf, 0x00, BUFSIZ);
@@ -95,11 +101,11 @@ static int print_addrinfo(const struct addrinfo *a)
         switch(a->ai_family) {
         case AF_INET:
                 struct sockaddr_in *addr_in = (struct sockaddr_in *)a->ai_addr;
-                inet_ntop(AF_INET, &(addr_in->sin_addr), addrbuf, INET_ADDRSTRLEN);
+                inet_ntop(AF_INET, &(addr_in->sin_addr), addrbuf, BUFSIZ);
                 break;
         case AF_INET6:
                 struct sockaddr_in6 *addr_in6 = (struct sockaddr_in6 *)a->ai_addr;
-                inet_ntop(AF_INET6, &(addr_in6->sin6_addr), addrbuf, INET6_ADDRSTRLEN);
+                inet_ntop(AF_INET6, &(addr_in6->sin6_addr), addrbuf, BUFSIZ);
                 break;
         default:
                 break;
@@ -116,4 +122,30 @@ static int print_addrinfo(const struct addrinfo *a)
                 a->ai_socktype, get_socktype(a->ai_socktype));
 
         return 0;
+}
+
+static int print_socket(const struct addrinfo *a, options_t *opts)
+{
+        if (!a || !opts)
+                return 0;       /* do not print */
+
+        /* IP protocol version check if dont print all */
+        if (!opts->ipvall && (
+                (a->ai_family == AF_INET && !opts->ipv4) ||
+                (a->ai_family == AF_INET6 && !opts->ipv6)
+        )) return 0;
+
+        if (!opts->tpall && (
+                (a->ai_protocol == IPPROTO_TCP && !opts->tcp) ||
+                (a->ai_protocol == IPPROTO_UDP && !opts->udp)
+        )) return 0;
+
+        if (!opts->stall && (
+                (a->ai_socktype == SOCK_STREAM && !opts->stream) ||
+                (a->ai_socktype == SOCK_DGRAM && !opts->dgram) ||
+                (a->ai_socktype == SOCK_RAW && !opts->raw)
+        )) return 0;
+
+        /* print socket */
+        return 1;
 }
