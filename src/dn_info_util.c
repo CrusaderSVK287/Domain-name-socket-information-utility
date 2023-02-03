@@ -29,6 +29,7 @@ void get_domain_name_info(int argc, char **argv, options_t *opts)
         if (!argv || !opts)
                 return;
 
+        int tmp = 0;
         char buff[BUFSIZ];
         memset(buff, 0x00, BUFSIZ);
 
@@ -41,6 +42,13 @@ void get_domain_name_info(int argc, char **argv, options_t *opts)
                                "name from %s, skipping\n", argv[i]);
                         continue;
                 }
+
+                /* Calculate offset of title */
+                tmp = 24 + strlen(buff) - (strlen(buff)/2);
+                printf("--------------------------------------------------\n"
+                        "%*s\n"
+                        "--------------------------------------------------\n", 
+                        tmp ,buff);
 
                 if (dn_info(buff, opts) < 0) {
                         e_warning("Failed to obtain domain name information\n", NULL);
@@ -111,10 +119,10 @@ static int print_addrinfo(const struct addrinfo *a, options_t *opts)
                 break;
         }
 
-        printf("address:              %s\n"
-                "address family: %4d  %s\n"
-                "protocol:       %4d  %s\n"
-                "type:           %4d  %s\n"
+        printf("Address:              %s\n"
+                "Address family: %4d  %s\n"
+                "Protocol:       %4d  %s\n"
+                "Type:           %4d  %s\n"
                 "\n",
                 addrbuf,
                 a->ai_family,   get_address_family(a->ai_family),
@@ -135,11 +143,13 @@ static int print_socket(const struct addrinfo *a, options_t *opts)
                 (a->ai_family == AF_INET6 && !opts->ipv6)
         )) return 0;
 
+        /* Transport protocol */
         if (!opts->tpall && (
                 (a->ai_protocol == IPPROTO_TCP && !opts->tcp) ||
                 (a->ai_protocol == IPPROTO_UDP && !opts->udp)
         )) return 0;
 
+        /* Socket type */
         if (!opts->stall && (
                 (a->ai_socktype == SOCK_STREAM && !opts->stream) ||
                 (a->ai_socktype == SOCK_DGRAM && !opts->dgram) ||
