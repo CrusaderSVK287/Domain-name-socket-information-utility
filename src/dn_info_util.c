@@ -146,7 +146,8 @@ static int print_socket(const struct addrinfo *a, options_t *opts)
         /* Transport protocol */
         if (!opts->tpall && (
                 (a->ai_protocol == IPPROTO_TCP && !opts->tcp) ||
-                (a->ai_protocol == IPPROTO_UDP && !opts->udp)
+                (a->ai_protocol == IPPROTO_UDP && !opts->udp) ||
+                (a->ai_protocol == IPPROTO_IP && !opts->ip)
         )) return 0;
 
         /* Socket type */

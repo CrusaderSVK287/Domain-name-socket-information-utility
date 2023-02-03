@@ -36,6 +36,7 @@ typedef struct options {
 
         int tcp;
         int udp;
+        int ip;
         int tpall;
 
         int stream;
