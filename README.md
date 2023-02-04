@@ -23,38 +23,44 @@ only works for the most common types of sockets. In case of
 transport protocol used, these are TCP, UDP and Unspecified (any)
 protocols. Other, less common, protocols would show allways.
 
-## Usage
+# Usage
 To use this program, all you need to do is to specify domain
 names you want to get information of in the cli arguments
 like this
 `./dninfo google.com example.org ...`
 and you will get information in this format:
-> --------------------------------------------------
->                    google.com
-> --------------------------------------------------
-> Address:              142.251.36.110
-> Address family:    2  IPv4
-> Protocol:          6  TCP
-> Type:              1  Stream socket
-> 
-> Address:              142.251.36.110
-> Address family:    2  IPv4
-> Protocol:         17  UDP
-> Type:              2  Datagram socket
-> ......
+```
+--------------------------------------------------
+                   google.com
+--------------------------------------------------
+Address:              142.251.36.110
+Address family:    2  IPv4
+Protocol:          6  TCP
+Type:              1  Stream socket
+
+Address:              142.251.36.110
+Address family:    2  IPv4
+Protocol:         17  UDP
+Type:              2  Datagram socket
+......
+```
 
 If this is too noisy for you, you can specify the `-c` or
 `--compact` flag to get a more *compact* output
 
->         Address                                 AF    Protocol     Type
-> --------------------------------------------------------------------------------
-> google.com:
->         142.251.36.110                          IPv4  TCP          Stream socket
->         142.251.36.110                          IPv4  UDP          Datagram sock
->         142.251.36.110                          IPv4  Unspecified  Raw socket   
->         2a00:1450:4014:80b::200e                IPv6  TCP          Stream socket
->         2a00:1450:4014:80b::200e                IPv6  UDP          Datagram sock
->         2a00:1450:4014:80b::200e                IPv6  Unspecified  Raw socket   
+```
+        Address                                 AF    Protocol     Type
+--------------------------------------------------------------------------------
+google.com:
+        142.251.36.110                          IPv4  TCP          Stream socket
+        142.251.36.110                          IPv4  UDP          Datagram sock
+        142.251.36.110                          IPv4  Unspecified  Raw socket   
+        2a00:1450:4014:80b::200e                IPv6  TCP          Stream socket
+        2a00:1450:4014:80b::200e                IPv6  UDP          Datagram sock
+        2a00:1450:4014:80b::200e                IPv6  Unspecified  Raw socket   
+example.org:
+        ...
+```
 
 Use `./dminfo --help` to see help page and list of all flags
 Use `./dminfo --version` to see the current version of the application
@@ -62,8 +68,15 @@ Use `./dminfo --version` to see the current version of the application
 # Compilation
 
 1. Clone this repository eighter with https or ssh
-HTTPS: `git clone https://github.com/CrusaderSVK287/Domain-name-information-utility.git`
-SSH: `git clone git@github.com:CrusaderSVK287/Domain-name-information-utility.git`
+
+HTTPS: 
+```bash
+git clone https://github.com/CrusaderSVK287/Domain-name-information-utility.git
+```
+SSH: 
+```bash
+git clone git@github.com:CrusaderSVK287/Domain-name-information-utility.git
+```
 
 2. cd into cloned repository and run `make`
 
