@@ -33,6 +33,11 @@ void get_domain_name_info(int argc, char **argv, options_t *opts)
         char buff[BUFSIZ];
         memset(buff, 0x00, BUFSIZ);
 
+        if (opts->compact)
+                printf("\tAddress \t\t\t\tAF    Protocol     Type\n"
+                        "----------------------------------------"
+                        "----------------------------------------");
+
         for (int i = 1; i < argc; i++) {
                 if (argv[i][0] == '-')
                         continue;
@@ -43,12 +48,16 @@ void get_domain_name_info(int argc, char **argv, options_t *opts)
                         continue;
                 }
 
-                /* Calculate offset of title */
+                /* Calculate offset of title and print it */
                 tmp = 24 + strlen(buff) - (strlen(buff)/2);
-                printf("--------------------------------------------------\n"
-                        "%*s\n"
-                        "--------------------------------------------------\n", 
-                        tmp ,buff);
+                if (!opts->compact)
+                        printf("--------------------------------------------------\n"
+                                "%*s\n"
+                                "--------------------------------------------------\n", 
+                                tmp ,buff);
+                else
+                        printf("\n%s:\n", buff);
+
 
                 if (dn_info(buff, opts) < 0) {
                         e_warning("Failed to obtain domain name information\n", NULL);
@@ -119,16 +128,25 @@ static int print_addrinfo(const struct addrinfo *a, options_t *opts)
                 break;
         }
 
-        printf("Address:              %s\n"
-                "Address family: %4d  %s\n"
-                "Protocol:       %4d  %s\n"
-                "Type:           %4d  %s\n"
-                "\n",
-                addrbuf,
-                a->ai_family,   get_address_family(a->ai_family),
-                a->ai_protocol, get_protocol(a->ai_protocol),
-                a->ai_socktype, get_socktype(a->ai_socktype));
-
+        if (!opts->compact) {
+                printf("Address:              %s\n"
+                        "Address family: %4d  %s\n"
+                        "Protocol:       %4d  %s\n"
+                        "Type:           %4d  %s\n"
+                        "\n",
+                        addrbuf,
+                        a->ai_family,   get_address_family(a->ai_family),
+                        a->ai_protocol, get_protocol(a->ai_protocol),
+                        a->ai_socktype, get_socktype(a->ai_socktype));
+        } else {
+                /* 8 for tab 40 for address, 6 for ip version 13 for the rest. Sum is 80 */
+                printf("\t%-*.*s %-*.*s %-*.*s %-*.*s\n",
+                        39, 39, addrbuf,
+                        5 , 5 , get_address_family(a->ai_family),
+                        12, 12, get_protocol(a->ai_protocol),
+                        13, 13, get_socktype(a->ai_socktype));
+        }
+        
         return 0;
 }
 

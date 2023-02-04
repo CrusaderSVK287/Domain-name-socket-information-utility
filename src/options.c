@@ -92,15 +92,18 @@ int parse_arguments(int argc, char **argv, options_t *opts)
                 {"dgram",       no_argument,    0, 'd'},  /* print datagram sockets */
                 {"raw",         no_argument,    0, 'r'},  /* print raw sockets */
 
+                {"compact",     no_argument,    0, 'c'},
+
                 {"version",     no_argument,    0, 'v'},  /* version */
                 {"help",        no_argument,    0, 'h'},  /* help */
+                
                 {0,             0,              0,  0 }
         };
 
         int opt_index = 0;
         int c = 0;
 
-        while ((c = getopt_long(argc, argv, "46tuasdr", long_options,
+        while ((c = getopt_long(argc, argv, "46tuasdrc", long_options,
                 &opt_index)) != -1) {
                 switch (c)
                 {
@@ -129,6 +132,9 @@ int parse_arguments(int argc, char **argv, options_t *opts)
                         break;
                 case 'r': opts->raw = 1;
                         opts->stall = 0;
+                        break;
+
+                case 'c': opts->compact = 1;
                         break;
 
                 case 'h':
@@ -173,6 +179,7 @@ static void print_help()
                 "\t--stream  -s  : stream sockets will be printed\n"
                 "\t--dgram   -d  : datagram sockets will be printed\n"
                 "\t--raw     -r  : raw sockets will be printed\n\n"
+                "\t--compact -c  : more compact table-like output\n\n"
                 "\tNote that these are the most common sockets thefore they are implemented\n"
                 "\tto be parsed out. More uncommon sockets will be printed always.\n"
                 "\tAlso, all sockets are printed by default, upon specifiing one of the\n"

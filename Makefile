@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Werror -std=gnu11 -g
+CFLAGS = -Wall -Werror -std=gnu11 -g -DNDEBUG
 
 SRCDIR = src/
 OBJDIR = obj/
@@ -7,13 +7,16 @@ BINDIR = bin/
 
 BINNAME = dminfo
 
-# Add arguments to be included in the program when making run target
+# Add arguments to be included in the program when making run or debug target
 RUNARGS =
+
+### COMPILATION ###
 
 SRCS=$(wildcard $(SRCDIR)*.c)
 OBJS=$(patsubst $(SRCDIR)%.c, $(OBJDIR)%.o, $(SRCS))
 
 BIN = $(BINDIR)$(BINNAME)
+RUN = $(BIN) $(RUNARGS)
 
 all: -setup $(BIN)
 
@@ -29,18 +32,14 @@ clean:
 ### RUNNING APPLICATION ###
 
 run: $(BIN)
-	@./$(BIN) $(RUNARGS)
+	@./$(RUN)
 
 debug: $(BIN)
-	gdb --args ./$(BIN) $(RUNARGS)
+	gdb --args ./$(RUN)
 
 valgrind: $(BIN)
-	valgrind -s --leak-check=full ./$(BIN) $(RUNARGS)
+	valgrind -s --leak-check=full ./$(RUN)
 
 ### SET UP ###
 -setup:
 	@mkdir -p $(SRCDIR) $(OBJDIR) $(BINDIR)
-
-### RELEASE ###
-release: CFLAGS += -DNDEBUG
-release: $(BIN)

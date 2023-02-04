@@ -43,6 +43,8 @@ typedef struct options {
         int dgram;
         int raw;
         int stall;
+
+        int compact;
 } options_t;
 
 /**
