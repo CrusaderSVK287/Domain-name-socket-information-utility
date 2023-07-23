@@ -5,7 +5,7 @@ SRCDIR = src/
 OBJDIR = obj/
 BINDIR = bin/
 
-BINNAME = dminfo
+BINNAME = dninfo
 
 # Add arguments to be included in the program when making run or debug target
 RUNARGS =
